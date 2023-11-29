@@ -3,10 +3,13 @@ import { Input } from "@nextui-org/input";
 import React, { useState } from "react";
 import axios from "axios";
 import { Button } from "@nextui-org/button";
+import { useAuth } from "../AuthContext";
 
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const { login } = useAuth();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -15,11 +18,13 @@ function SignUp() {
       const response = await axios.post("http://localhost:4500/users/signup", {
         email,
         password,
+        displayName,
       });
 
       if (response.status === 200) {
-        // Handle successful authentication, e.g., redirect the user
-        console.log("Authentication successful!");
+        const userData = await response.data;
+        login(userData); // Call the login function with user data
+        console.log(userData);
       } else {
         // Handle authentication error, show error message, etc.
         console.error("Authentication failed.");
@@ -36,6 +41,13 @@ function SignUp() {
         onSubmit={handleSubmit}
         className="mx-auto max-w-md gap-4 flex flex-col"
       >
+        <Input
+          size="sm"
+          type="name"
+          label="Name"
+          value={displayName}
+          onChange={(e) => setDisplayName(e.target.value)}
+        />
         <Input
           size="sm"
           type="email"

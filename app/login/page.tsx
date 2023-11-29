@@ -1,10 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Input } from "@nextui-org/react";
+import { useAuth } from "../AuthContext";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useAuth();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -19,6 +21,8 @@ function Login() {
       });
 
       if (response.ok) {
+        const userData = await response.json();
+        login(userData); // Call the login function with user data
         console.log("Authentication successful!");
       } else {
         console.log("Authentication Failed");

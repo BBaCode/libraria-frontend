@@ -15,9 +15,11 @@ import { Kbd } from "@nextui-org/kbd";
 import { Link } from "@nextui-org/link";
 import { Input } from "@nextui-org/input";
 import React from "react";
+import { useAuth } from "../AuthContext";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const { user, logout } = useAuth();
 
   const menuItems = ["Library", "Books", "Friends"];
 
@@ -51,17 +53,24 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem className="lg:flex">
-          <Link href="/login">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="/signup" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
-        <NavbarItem>
-          <Avatar name="June" />
-        </NavbarItem>
+        {!user ? (
+          <>
+            <NavbarItem className="lg:flex">
+              <Link href="/login">Login</Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Button as={Link} color="primary" href="/signup" variant="flat">
+                Sign Up
+              </Button>
+            </NavbarItem>
+          </>
+        ) : (
+          <>
+            <NavbarItem>
+              <Avatar name={user.displayName} />
+            </NavbarItem>
+          </>
+        )}
       </NavbarContent>
       <NavbarMenu>
         {menuItems.map((item, index) => (
