@@ -9,7 +9,7 @@ function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const { login } = useAuth();
+  const { login, redirectToHome } = useAuth();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -24,6 +24,7 @@ function SignUp() {
       if (response.status === 200) {
         const userData = await response.data;
         login(userData); // Call the login function with user data
+        redirectToHome();
         console.log(userData);
       } else {
         // Handle authentication error, show error message, etc.
