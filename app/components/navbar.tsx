@@ -17,22 +17,20 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 import { Button } from "@nextui-org/button";
-import { Kbd } from "@nextui-org/kbd";
 import { Link } from "@nextui-org/link";
-import { Input } from "@nextui-org/input";
 import React, { useState } from "react";
 import { useAuth } from "../AuthContext";
+import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { user, logout } = useAuth();
 
-  const menuItems = ["Library", "Books", "Friends"];
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const isActive = (href: string) => {
+    return usePathname() === href;
   };
+
+  const menuItems = ["Library", "Books", "Friends"];
 
   return (
     <NextUINavbar onMenuOpenChange={setIsMenuOpen}>
@@ -42,23 +40,34 @@ export const Navbar = () => {
           className="sm:hidden"
         />
         <NavbarBrand>
-          <p className="font-bold text-inherit">LIBRARIA</p>
+          <a href="/" className="font-bold text-inherit">
+            LIBRARIA
+          </a>
         </NavbarBrand>
       </NavbarContent>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link
+            color={isActive("/library") ? "primary" : "foreground"}
+            href="/library"
+          >
             Library
           </Link>
         </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page">
+        <NavbarItem>
+          <Link
+            color={isActive("/books") ? "primary" : "foreground"}
+            href="/books"
+          >
             Books
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link
+            color={isActive("/friends") ? "primary" : "foreground"}
+            href="/friends"
+          >
             Friends
           </Link>
         </NavbarItem>
