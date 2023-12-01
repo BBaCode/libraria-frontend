@@ -10,24 +10,43 @@ import {
   NavbarMenuItem,
 } from "@nextui-org/navbar";
 import {
+  Autocomplete,
+  AutocompleteItem,
   Avatar,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Input,
 } from "@nextui-org/react";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import React, { useState } from "react";
 import { useAuth } from "../AuthContext";
 import { usePathname } from "next/navigation";
+// import { useBooksList } from "../api/useBooksList";
+import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
+// import BookSearch from "./bookSearch";
+import BookSearch from "./bookSearchTwo";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
+  const [isOpen, setIsOpen] = React.useState(false);
+
   const { user, logout } = useAuth();
 
   const isActive = (href: string) => {
     return usePathname() === href;
+  };
+
+  const handleInputFocus = () => {
+    setIsInputFocused(true);
+  };
+
+  const handleInputBlur = () => {
+    setIsInputFocused(false);
   };
 
   const menuItems = ["Library", "Books", "Friends"];
@@ -70,6 +89,9 @@ export const Navbar = () => {
           >
             Friends
           </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <BookSearch></BookSearch>
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">

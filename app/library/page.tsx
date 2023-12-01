@@ -13,16 +13,18 @@ import React, { useEffect } from "react";
 
 function Library() {
   let books = [];
-  useEffect(() => {
-    axios
-      .get(`http://localhost:4500/library`, {})
-      .then((res) => {
-        console.log(res.data);
-        books = Object.values(res.data.books);
-        console.log(books);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:4500/library`, {})
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       books = Object.values(res.data.books);
+  //       console.log(books);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
+
+  //NEXT STEP LOAD LIBRARY WITH BOOKS FROM LINE 21
 
   return (
     <Table
