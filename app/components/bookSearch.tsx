@@ -1,46 +1,42 @@
-import { Autocomplete, AutocompleteItem, Input } from "@nextui-org/react";
+import { Input, Listbox, ListboxItem, Button } from "@nextui-org/react";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import React, { useState } from "react";
-function useBooksList({ fetchDelay = 0 } = {}, search: any) {
+import "./bookSearch.css";
+
+import SearchIcon from "../icons/SearchIcon";
+import axios from "axios";
+function useBooksList(search: any) {
   const [items, setItems] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [offset, setOffset] = useState(0);
 
   const loadBooks = async (search: any) => {
     const controller = new AbortController();
     const { signal } = controller;
 
-    try {
-      setIsLoading(true);
+    if (search) {
+      try {
+        setIsLoading(true);
 
-      setTimeout(() => {
-        console.log("1 second");
-      }, 1000);
+        let res = await fetch(
+          `https://www.googleapis.com/books/v1/volumes?q=${search}&maxResults=20`,
+          { signal }
+        );
 
-      let res = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=${search}&maxResults=20`,
-        { signal }
-      );
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
 
-      if (!res.ok) {
-        throw new Error("Network response was not ok");
+        let json = await res.json();
+        if (json) setItems(json.items);
+      } catch (error: any) {
+        if (error.name === "AbortError") {
+          console.log("Fetch aborted");
+        } else {
+          console.error("There was an error with the fetch operation:", error);
+        }
+      } finally {
+        setIsLoading(false);
       }
-
-      let json = await res.json();
-      console.log(json.items);
-
-      // setHasMore(json.items !== null);
-      // // Append new results to existing ones
-      if (json) setItems(json.items);
-    } catch (error: any) {
-      if (error.name === "AbortError") {
-        console.log("Fetch aborted");
-      } else {
-        console.error("There was an error with the fetch operation:", error);
-      }
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -57,44 +53,134 @@ function useBooksList({ fetchDelay = 0 } = {}, search: any) {
 function BookSearch() {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
+  // updates the search list with whatever user is searching
   const handleChange = (event: any) => {
-    event.continuePropogation();
     const value = event.target.value;
     console.log(value);
     setSearch(value);
   };
 
-  const { items, isLoading } = useBooksList(
-    {
-      fetchDelay: 1500,
-    },
-    search
-  );
+  // used to make listbox appear/not appear depending on input focus
+  const handleInputFocus = () => {
+    setIsInputFocused(true);
+  };
+
+  const handleInputBlur = () => {
+    setIsInputFocused(false);
+  };
+
+  const { items, isLoading } = useBooksList(search);
+  let updatedI = items;
 
   const [, scrollerRef] = useInfiniteScroll({
     isEnabled: isOpen,
     shouldUseLoader: false, // We don't want to show the loader at the bottom of the list
   });
+
+  // add new book to user library
+  const postBook = (id: string, title: string, authors: string) => {
+    let bookInfo;
+    if (authors) {
+      bookInfo = {
+        id: id,
+        title: title,
+        authors: authors,
+      };
+    } else {
+      bookInfo = {
+        id: id,
+        title: title,
+        authors: "unknown",
+      };
+    }
+
+    axios
+      .post(`http://localhost:4500/library/writeBook`, bookInfo)
+      .then((res) => {
+        alert("Added!");
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
-    <Autocomplete
-      className="w-max-sm"
-      variant="bordered"
-      isLoading={isLoading}
-      defaultItems={items}
-      aria-label="Search for a Book"
-      placeholder="Search for a Book"
-      scrollRef={scrollerRef}
-      onOpenChange={setIsOpen}
-      onChange={handleChange}
-      value={search}
-    >
-      {(item: any) => (
-        <AutocompleteItem key={item.name} className="capitalize">
-          {item.volumeInfo.title}
-        </AutocompleteItem>
+    <div className="relative max-w-sm">
+      <Input
+        variant="bordered"
+        aria-label="Search for a book"
+        placeholder="Search for a book"
+        type="text"
+        size="sm"
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
+        onChange={handleChange}
+        endContent={<SearchIcon />}
+        classNames={{
+          base: "max-w-full sm:max-w-[18rem] h-10",
+          mainWrapper: "h-full",
+          input: "text-small",
+          inputWrapper: "h-full font-normal",
+        }}
+      ></Input>
+      {search.length > 3 ? (
+        <Listbox
+          items={items}
+          aria-label="Dynamic Actions"
+          className="bg-black absolute overflow-y-scroll h-64 rounded-xl mt-1 lbox"
+        >
+          {(item: any) => (
+            <ListboxItem
+              className="relative boooo"
+              key={item.key}
+              color={"default"}
+            >
+              <div>
+                {item.volumeInfo.imageLinks ? (
+                  <img
+                    className="w-8 inline me-2"
+                    src={
+                      item.volumeInfo.imageLinks.smallThumbnail || "no image"
+                    }
+                    alt={item.volumeInfo.title}
+                  />
+                ) : (
+                  <img alt="no image" />
+                )}
+                <div className="inline-flex flex-col justify-center align-middle">
+                  <span className="text-medium">
+                    {item.volumeInfo.title.substring(0, 40)}
+                  </span>
+                  {item.volumeInfo.authors ? (
+                    <span className="text-small text-default-400">
+                      {item.volumeInfo.authors[0]}
+                    </span>
+                  ) : (
+                    <span className="text-small text-default-400">Unknown</span>
+                  )}
+                </div>
+              </div>
+
+              <Button
+                onClick={() => {
+                  postBook(
+                    item.id,
+                    item.volumeInfo.title,
+                    item.volumeInfo.authors
+                  );
+                }}
+                className="bg-green-600"
+              >
+                Add
+              </Button>
+            </ListboxItem>
+          )}
+        </Listbox>
+      ) : (
+        ""
       )}
-    </Autocomplete>
+    </div>
   );
 }
 

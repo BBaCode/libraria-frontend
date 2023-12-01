@@ -9,20 +9,27 @@ import {
   TableCell,
 } from "@nextui-org/react";
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 function Library() {
-  let books = [];
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:4500/library`, {})
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       books = Object.values(res.data.books);
-  //       console.log(books);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
+  const [books, setBooks] = useState([]);
+  useEffect(() => {
+    axios
+      .get(`http://localhost:4500/library`, {})
+      .then((res) => {
+        console.log(res.data["kLAoswEACAAJ"]);
+        console.log(res.data);
+        let data = res.data;
+        let setter: any = [];
+        data.forEach((data: {}) => {
+          setter.push(data);
+        });
+
+        setBooks(Object.values(setter));
+        console.log(setter);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   //NEXT STEP LOAD LIBRARY WITH BOOKS FROM LINE 21
 
@@ -37,26 +44,21 @@ function Library() {
         <TableColumn>STATUS</TableColumn>
       </TableHeader>
       <TableBody>
-        <TableRow key="1">
-          <TableCell>Tony Reichert</TableCell>
-          <TableCell>CEO</TableCell>
-          <TableCell>Active</TableCell>
-        </TableRow>
-        <TableRow key="2">
-          <TableCell>Zoey Lang</TableCell>
-          <TableCell>Technical Lead</TableCell>
-          <TableCell>Paused</TableCell>
-        </TableRow>
-        <TableRow key="3">
-          <TableCell>Jane Fisher</TableCell>
-          <TableCell>Senior Developer</TableCell>
-          <TableCell>Active</TableCell>
-        </TableRow>
-        <TableRow key="4">
-          <TableCell>William Howard</TableCell>
-          <TableCell>Community Manager</TableCell>
-          <TableCell>Vacation</TableCell>
-        </TableRow>
+        {books ? (
+          books.map((book: any, index) => (
+            <TableRow key={index.toString()}>
+              <TableCell>{book.title}</TableCell>
+              <TableCell>{book.authors}</TableCell>
+              <TableCell>Read</TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell>Add your first book</TableCell>
+            <TableCell>NA</TableCell>
+            <TableCell>Read</TableCell>
+          </TableRow>
+        )}
       </TableBody>
     </Table>
   );
