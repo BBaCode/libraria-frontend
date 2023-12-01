@@ -5,6 +5,7 @@ import "./bookSearch.css";
 
 import SearchIcon from "../icons/SearchIcon";
 import axios from "axios";
+import { useLibrary } from "../LibraryContext";
 function useBooksList(search: any) {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,6 +55,7 @@ function BookSearch() {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const { library, addBookToLibrary } = useLibrary();
 
   // updates the search list with whatever user is searching
   const handleChange = (event: any) => {
@@ -81,7 +83,7 @@ function BookSearch() {
 
   // add new book to user library
   const postBook = (id: string, title: string, authors: string) => {
-    let bookInfo;
+    let bookInfo: any;
     if (authors) {
       bookInfo = {
         id: id,
@@ -99,8 +101,10 @@ function BookSearch() {
     axios
       .post(`http://localhost:4500/library/writeBook`, bookInfo)
       .then((res) => {
+        addBookToLibrary(bookInfo);
         alert("Added!");
-        console.log(res);
+        setSearch("");
+        setIsOpen(false);
       })
       .catch((err) => console.log(err));
   };

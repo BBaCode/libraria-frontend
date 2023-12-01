@@ -10,26 +10,20 @@ import {
 } from "@nextui-org/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useLibrary } from "../LibraryContext";
 
 function Library() {
+  const { library } = useLibrary();
   const [books, setBooks] = useState([]);
   useEffect(() => {
     axios
       .get(`http://localhost:4500/library`, {})
       .then((res) => {
-        console.log(res.data["kLAoswEACAAJ"]);
+        setBooks(Object.values(res.data));
         console.log(res.data);
-        let data = res.data;
-        let setter: any = [];
-        data.forEach((data: {}) => {
-          setter.push(data);
-        });
-
-        setBooks(Object.values(setter));
-        console.log(setter);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [library]);
 
   //NEXT STEP LOAD LIBRARY WITH BOOKS FROM LINE 21
 
