@@ -1,11 +1,11 @@
 import { Input, Listbox, ListboxItem, Button } from "@nextui-org/react";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import React, { useState } from "react";
-import "./bookSearch.css";
+import "./BookSearch.css";
 
-import SearchIcon from "../icons/SearchIcon";
+import SearchIcon from "../../icons/SearchIcon";
 import axios from "axios";
-import { useLibrary } from "../LibraryContext";
+import { useLibrary } from "@/app/context/LibraryContext";
 function useBooksList(search: any) {
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -103,8 +103,8 @@ function BookSearch() {
       .then((res) => {
         addBookToLibrary(bookInfo);
         alert("Added!");
-        setSearch("");
-        setIsOpen(false);
+        setSearch(""); // reset input field
+        setIsOpen(false); // close the listbox
       })
       .catch((err) => console.log(err));
   };
@@ -128,7 +128,7 @@ function BookSearch() {
           inputWrapper: "h-full font-normal",
         }}
       ></Input>
-      {search.length > 3 ? (
+      {search.length > 3 ? ( // dont show listbox until the user has typed 3 letters
         <Listbox
           items={items}
           aria-label="Dynamic Actions"

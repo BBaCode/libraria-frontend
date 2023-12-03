@@ -10,7 +10,7 @@ import {
 } from "@nextui-org/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useLibrary } from "../LibraryContext";
+import { useLibrary } from "../context/LibraryContext";
 
 function Library() {
   const { library } = useLibrary();
@@ -23,9 +23,7 @@ function Library() {
         console.log(res.data);
       })
       .catch((err) => console.log(err));
-  }, [library]);
-
-  //NEXT STEP LOAD LIBRARY WITH BOOKS FROM LINE 21
+  }, [library]); // using library as the dependency to rerender the list
 
   return (
     <Table

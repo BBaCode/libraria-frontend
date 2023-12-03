@@ -5,8 +5,8 @@ import { NextUIProvider } from "@nextui-org/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
-import { AuthProvider } from "./AuthContext";
-import { LibraryProvider } from "./LibraryContext";
+import { AuthProvider } from "./context/AuthContext";
+import { LibraryProvider } from "./context/LibraryContext";
 
 export interface ProvidersProps {
   children: React.ReactNode;

@@ -22,9 +22,9 @@ import {
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import React, { useState } from "react";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { usePathname } from "next/navigation";
-import BookSearch from "./bookSearch";
+import BookSearch from "../BookSearch/BookSearch";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -109,10 +109,6 @@ export const Navbar = () => {
                   <p className="font-semibold">{user.email}</p>
                 </DropdownItem>
                 <DropdownItem key="settings">My Settings</DropdownItem>
-                <DropdownItem key="team_settings">Team Settings</DropdownItem>
-                <DropdownItem key="analytics">Analytics</DropdownItem>
-                <DropdownItem key="system">System</DropdownItem>
-                <DropdownItem key="configurations">Configurations</DropdownItem>
                 <DropdownItem key="help_and_feedback">
                   Help & Feedback
                 </DropdownItem>
