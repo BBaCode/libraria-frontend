@@ -6,18 +6,36 @@ import { Button } from "@nextui-org/button";
 import { useAuth } from "@/app/context/AuthContext";
 import { validate } from "@/app/validators";
 
-function SignUp() {
+function Page() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const { login, redirectToHome } = useAuth();
-
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
-    familyAccount: "",
+    parentEmail: "",
     displayName: "",
   });
+
+  const isDisplayNameInvalid = useMemo(() => {
+    return validate("displayName", formData.displayName);
+  }, [formData.displayName]);
+
+  const isUsernameInvalid = useMemo(() => {
+    return validate("username", formData.username);
+  }, [formData.username]);
+
+  const isPasswordInvalid = useMemo(() => {
+    return validate("password", formData.password);
+  }, [formData.password]);
+
+  const isConfirmPasswordInvalid = useMemo(() => {
+    return validate("confirmPassword", confirmPassword, formData.password);
+  }, [confirmPassword]);
+
+  const isParentEmailInvalid = useMemo(() => {
+    return validate("parentEmail", formData.parentEmail);
+  }, [formData.parentEmail]);
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -30,45 +48,29 @@ function SignUp() {
   const isFormValid = () => {
     return (
       !isDisplayNameInvalid &&
+      !isUsernameInvalid &&
       !isPasswordInvalid &&
-      !isEmailInvalid &&
+      !isParentEmailInvalid &&
       formData.displayName.length !== 0 &&
+      formData.username.length !== 0 &&
       formData.password.length !== 0 &&
-      formData.email.length !== 0
+      formData.parentEmail.length !== 0
     );
   };
 
-  const isDisplayNameInvalid = useMemo(() => {
-    return validate("displayName", formData.displayName);
-  }, [formData.displayName]);
-
-  const isPasswordInvalid = useMemo(() => {
-    return validate("password", formData.password);
-  }, [formData.password]);
-
-  const isConfirmPasswordInvalid = useMemo(() => {
-    return validate("confirmPassword", confirmPassword, formData.password);
-  }, [confirmPassword]);
-
-  const isEmailInvalid = useMemo(() => {
-    return validate("email", formData.email);
-  }, [formData.email]);
-
-  const isFamilyAccountInvalid = useMemo(() => {
-    return validate("familyAccount", formData.familyAccount);
-  }, [formData.familyAccount]);
+  const { login, redirectToHome } = useAuth();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     try {
       const response = await axios.post(
-        "http://localhost:4500/users/signup/parent",
+        "http://localhost:4500/users/signup/child",
         {
-          email: formData.email,
+          username: formData.username,
           password: formData.password,
           displayName: formData.displayName,
-          familyAccount: formData.familyAccount,
+          parentEmail: formData.parentEmail,
         }
       );
 
@@ -89,7 +91,7 @@ function SignUp() {
 
   return (
     <div className="container p-10 mx-auto">
-      <h2 className="text-center font-bold text-3xl mb-4">Signup</h2>
+      <h2 className="text-center font-bold text-3xl mb-4">Child Signup</h2>
       <form
         onSubmit={handleSubmit}
         className="mx-auto max-w-md gap-4 flex flex-col"
@@ -97,8 +99,8 @@ function SignUp() {
         <Input
           isRequired
           size="sm"
-          type="name"
           name="displayName"
+          type="name"
           label="Name"
           value={formData.displayName}
           onChange={handleInputChange}
@@ -111,14 +113,16 @@ function SignUp() {
         <Input
           isRequired
           size="sm"
-          type="email"
-          name="email"
-          label="Email"
-          value={formData.email}
+          name="username"
+          type="text"
+          label="Username"
+          value={formData.username}
           onChange={handleInputChange}
-          isInvalid={isEmailInvalid}
-          errorMessage={isEmailInvalid && "Email must contain @ and ."}
-          color={isEmailInvalid ? "danger" : "default"}
+          isInvalid={isUsernameInvalid}
+          errorMessage={
+            isUsernameInvalid && "Your username must be of at least length 8"
+          }
+          color={isUsernameInvalid ? "danger" : "default"}
         />
         <Input
           isRequired
@@ -138,8 +142,8 @@ function SignUp() {
         <Input
           isRequired
           size="sm"
-          type="password"
           name="confirmPassword"
+          type="password"
           label="Confirm Password"
           onChange={(e) => {
             setConfirmPassword(e.target.value);
@@ -151,21 +155,17 @@ function SignUp() {
           color={isConfirmPasswordInvalid ? "danger" : "default"}
         />
         <Input
-          isRequired
           size="sm"
-          type="text"
-          name="familyAccount"
-          label="Family Account Name"
-          value={formData.familyAccount}
+          type="email"
+          name="parentEmail"
+          label="Parent's Email"
+          value={formData.parentEmail}
           onChange={handleInputChange}
-          isInvalid={validate("familyAccount", formData.familyAccount)}
-          errorMessage={
-            isFamilyAccountInvalid &&
-            "Your Family Name must be at least 2 letters"
-          }
-          color={isPasswordInvalid ? "danger" : "default"}
+          isInvalid={isParentEmailInvalid}
+          errorMessage={isParentEmailInvalid && "Email must contain @ and ."}
+          color={isParentEmailInvalid ? "danger" : "default"}
         />
-        <Button type="submit" color="primary" isDisabled={!isFormValid()}>
+        <Button isDisabled={!isFormValid()} type="submit" color="primary">
           Submit
         </Button>
       </form>
@@ -178,4 +178,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default Page;

@@ -15,7 +15,7 @@ function Signup() {
           </Button>
         </Link>
 
-        <Link href="/signup/student">
+        <Link href="/signup/child">
           <Button className="p-10 text-2xl" variant="ghost" color="secondary">
             Student
           </Button>

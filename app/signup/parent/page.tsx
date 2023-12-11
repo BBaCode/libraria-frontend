@@ -1,7 +1,8 @@
 import React from "react";
+import SignUp from "@/app/components/Signup/Signup";
 
-function Parent() {
-  return <div>Parent</div>;
+function Page() {
+  return <SignUp></SignUp>;
 }
 
-export default Parent;
+export default Page;

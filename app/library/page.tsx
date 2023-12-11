@@ -12,7 +12,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLibrary } from "../context/LibraryContext";
 
-function Library() {
+function Page() {
   const { library } = useLibrary();
   const [books, setBooks] = useState([]);
   useEffect(() => {
@@ -56,4 +56,4 @@ function Library() {
   );
 }
 
-export default Library;
+export default Page;
