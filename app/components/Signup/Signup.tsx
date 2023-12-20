@@ -6,7 +6,7 @@ import { Button } from "@nextui-org/button";
 import { useAuth } from "@/app/context/AuthContext";
 import { validate } from "@/app/validators";
 
-function SignUp() {
+function SignUp({ type }: { type: string }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -150,21 +150,26 @@ function SignUp() {
           }
           color={isConfirmPasswordInvalid ? "danger" : "default"}
         />
-        <Input
-          isRequired
-          size="sm"
-          type="text"
-          name="familyAccount"
-          label="Family Account Name"
-          value={formData.familyAccount}
-          onChange={handleInputChange}
-          isInvalid={validate("familyAccount", formData.familyAccount)}
-          errorMessage={
-            isFamilyAccountInvalid &&
-            "Your Family Name must be at least 2 letters"
-          }
-          color={isPasswordInvalid ? "danger" : "default"}
-        />
+        {type === "parent" ? (
+          <Input
+            isRequired
+            size="sm"
+            type="text"
+            name="familyAccount"
+            label="Family Account Name"
+            value={formData.familyAccount}
+            onChange={handleInputChange}
+            isInvalid={validate("familyAccount", formData.familyAccount)}
+            errorMessage={
+              isFamilyAccountInvalid &&
+              "Your Family Name must be at least 2 letters"
+            }
+            color={isFamilyAccountInvalid ? "danger" : "default"}
+          />
+        ) : (
+          ""
+        )}
+
         <Button type="submit" color="primary" isDisabled={!isFormValid()}>
           Submit
         </Button>

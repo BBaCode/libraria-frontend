@@ -12,26 +12,34 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:4500/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email, password: password }),
-      });
-
-      if (response.ok) {
-        const userData = await response.json();
-        login(userData); // Call the login function with user data
-        redirectToHome();
-        console.log("Authentication successful!");
-      } else {
-        console.log("Authentication Failed");
-      }
-    } catch (error) {
-      console.error("Error during authentication:", error);
+      await login(email, password); // Using Firebase for authentication
+      redirectToHome();
+      console.log("Authentication successful!");
+    } catch (error: any) {
+      console.error("Authentication failed: ", error.message);
     }
   };
+  // try {
+  //   const response = await fetch("http://localhost:4500/users/login", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ email: email, password: password }),
+  //   });
+
+  //   if (response.ok) {
+  //     const userData = await response.json();
+  //     login(userData); // Call the login function with user data
+  //     redirectToHome();
+  //     console.log("Authentication successful!");
+  //   } else {
+  //     console.log("Authentication Failed");
+  //   }
+  // } catch (error) {
+  //   console.error("We cannot find that username/password combination.");
+  // }
+  //
 
   return (
     <div className="container p-10 mx-auto">

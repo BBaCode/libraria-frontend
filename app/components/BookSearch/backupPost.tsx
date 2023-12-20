@@ -78,6 +78,7 @@ function BookSearch() {
   };
 
   const { items, isLoading } = useBooksList(search);
+  let updatedI = items;
 
   const [, scrollerRef] = useInfiniteScroll({
     isEnabled: isOpen,
@@ -85,14 +86,35 @@ function BookSearch() {
   });
 
   // add new book to user library
-  const clickBook = (id: string, volumeInfo: string) => {
+  const postBook = (id: string, title: string, authors: string) => {
+    let bookInfo: any;
     setCurrentBook({
       id: id,
-      volumeInfo: volumeInfo,
+      title: title,
+      authors: authors,
     });
-    setSearch("");
-    setIsOpen(false);
-    router.push(`/books/${id}`);
+    if (authors) {
+      bookInfo = {
+        id: id,
+        title: title,
+        authors: authors,
+      };
+    } else {
+      bookInfo = {
+        id: id,
+        title: title,
+        authors: "unknown",
+      };
+    }
+
+    axios
+      .post(`http://localhost:4500/library/writeBook`, bookInfo)
+      .then((res) => {
+        setSearch(""); // reset input field
+        setIsOpen(false); // close the listbox
+        router.push(`/books/${id}`);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -126,7 +148,11 @@ function BookSearch() {
               key={item.key}
               color={"default"}
               onClick={() => {
-                clickBook(item.id, item.volumeInfo);
+                postBook(
+                  item.id,
+                  item.volumeInfo.title,
+                  item.volumeInfo.authors
+                );
               }}
             >
               <div>
@@ -154,6 +180,19 @@ function BookSearch() {
                   )}
                 </div>
               </div>
+
+              <Button
+                onClick={() => {
+                  postBook(
+                    item.id,
+                    item.volumeInfo.title,
+                    item.volumeInfo.authors
+                  );
+                }}
+                className="bg-green-600"
+              >
+                Add
+              </Button>
             </ListboxItem>
           )}
         </Listbox>

@@ -98,7 +98,7 @@ export const Navbar = () => {
               <DropdownTrigger>
                 <Avatar
                   isBordered
-                  name={user.displayName[0]}
+                  name={user.displayName ? user.displayName[0] : "User"}
                   as="button"
                   className="transition-transform"
                 />

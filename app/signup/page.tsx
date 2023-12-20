@@ -2,12 +2,15 @@
 
 import { Button } from "@nextui-org/react";
 import Link from "next/link";
-import React from "react";
 
-function Signup() {
+import React from "react";
+import Signup from "../components/Signup/Signup";
+
+function Page() {
   return (
     <div className="container mx-auto pt-20">
-      <div className="mx-auto text-6xl text-center">Are you a</div>
+      <Signup type="individual"></Signup>
+      {/* <div className="mx-auto text-6xl text-center">Are you a</div>
       <div className="container mx-auto pt-12 flex max-w-sm justify-between">
         <Link href="/signup/parent">
           <Button className="p-10 text-2xl" variant="ghost" color="primary">
@@ -20,9 +23,9 @@ function Signup() {
             Student
           </Button>
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
 
-export default Signup;
+export default Page;

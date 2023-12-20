@@ -7,6 +7,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { AuthProvider } from "./context/AuthContext";
 import { LibraryProvider } from "./context/LibraryContext";
+import { CurrentBookProvider } from "./context/CurrentBookContext";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -20,7 +21,9 @@ export function Providers({ children, themeProps }: ProvidersProps) {
     <NextUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps}>
         <AuthProvider>
-          <LibraryProvider>{children}</LibraryProvider>
+          <LibraryProvider>
+            <CurrentBookProvider>{children}</CurrentBookProvider>
+          </LibraryProvider>
         </AuthProvider>
       </NextThemesProvider>
     </NextUIProvider>
