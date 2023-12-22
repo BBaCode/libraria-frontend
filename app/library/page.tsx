@@ -13,19 +13,40 @@ import React, { useEffect, useState } from "react";
 import { useLibrary } from "../context/LibraryContext";
 import { useAuth } from "../context/AuthContext";
 import SignupRedirect from "../components/SignupRedirect/SignupRedirect";
+import { useCurrentBook } from "../context/CurrentBookContext";
+import { useRouter } from "next/navigation";
 
 function Page() {
   const { user } = useAuth();
   const { library } = useLibrary();
   const [books, setBooks] = useState([]);
+  const { setCurrentBook } = useCurrentBook();
+  const router = useRouter();
+
+  const clickBook = (id: string, volumeInfo: string) => {
+    setCurrentBook({
+      id: id,
+      volumeInfo: volumeInfo,
+    });
+    router.push(`/books/${id}`);
+  };
+
   useEffect(() => {
-    axios
-      .get(`http://localhost:4500/library`, {})
-      .then((res) => {
-        setBooks(Object.values(res.data));
-        console.log(res.data);
-      })
-      .catch((err) => console.log(err));
+    if (user?.uid) {
+      axios
+        .post(`http://localhost:4500/library`, { userId: user.uid })
+        .then((res) => {
+          const transformedBooks: any = Object.entries(res.data).map(
+            ([id, volumeInfo]) => ({
+              id,
+              ...(volumeInfo ?? {}),
+            })
+          );
+          if (transformedBooks) setBooks(transformedBooks);
+          console.log(transformedBooks);
+        })
+        .catch((err) => console.log(err));
+    }
   }, [library]); // using library as the dependency to rerender the list
 
   return (
@@ -43,9 +64,15 @@ function Page() {
           <TableBody>
             {books ? (
               books.map((book: any, index) => (
-                <TableRow key={index.toString()}>
-                  <TableCell>{book.title}</TableCell>
-                  <TableCell>{book.authors}</TableCell>
+                <TableRow
+                  className="cursor-pointer hover:bg-slate-600"
+                  onClick={() => {
+                    clickBook(book.id, book.volumeInfo);
+                  }}
+                  key={index.toString()}
+                >
+                  <TableCell>{book.volumeInfo.title}</TableCell>
+                  <TableCell>{book.volumeInfo.authors}</TableCell>
                   <TableCell>Read</TableCell>
                 </TableRow>
               ))

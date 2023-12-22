@@ -29,7 +29,7 @@ import BookSearch from "../BookSearch/BookSearch";
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
 
   const isActive = (href: string) => {
     return usePathname() === href;
@@ -96,12 +96,20 @@ export const Navbar = () => {
           <>
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
-                <Avatar
-                  isBordered
-                  name={user.displayName ? user.displayName[0] : "User"}
-                  as="button"
-                  className="transition-transform"
-                />
+                {user.displayName ? (
+                  <Avatar
+                    isBordered
+                    name={user.displayName[0].toUpperCase()}
+                    as="button"
+                    className="transition-transform"
+                  />
+                ) : (
+                  <Avatar
+                    isBordered
+                    as="button"
+                    className="transition-transform"
+                  />
+                )}
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem key="profile" className="h-14 gap-2">

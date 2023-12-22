@@ -5,12 +5,19 @@ import axios from "axios";
 import { Button } from "@nextui-org/button";
 import { useAuth } from "@/app/context/AuthContext";
 import { validate } from "@/app/validators";
+import {
+  signInWithPopup,
+  provider,
+  auth,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from "../../firebase";
 
 function SignUp({ type }: { type: string }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const { login, redirectToHome } = useAuth();
+  const { redirectToHome, user, setUser } = useAuth();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -18,6 +25,32 @@ function SignUp({ type }: { type: string }) {
     familyAccount: "",
     displayName: "",
   });
+
+  const handleGoogleSignUp = async () => {
+    signInWithPopup(auth, provider)
+      .then(async (result) => {
+        const user = result.user;
+        // Send user data to your backend
+        const response = await axios.post(
+          "http://localhost:4500/users/signup/google",
+          {
+            email: user.email,
+            displayName: user.displayName,
+            id: user.uid,
+          }
+        );
+        if (response.status === 200 || response.status === 201) {
+          setErrorMessage("");
+          redirectToHome();
+          console.log(user);
+        } else {
+          console.error("Authentication failed.");
+        }
+      })
+      .catch((error) => {
+        // Handle Sign In Error
+      });
+  };
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -60,30 +93,38 @@ function SignUp({ type }: { type: string }) {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      formData.email,
+      formData.password
+    );
+    const userCred = userCredential.user;
 
-    try {
-      const response = await axios.post(
-        "http://localhost:4500/users/signup/parent",
-        {
-          email: formData.email,
-          password: formData.password,
-          displayName: formData.displayName,
-          familyAccount: formData.familyAccount,
-        }
-      );
+    // Update user with a displayname
+    await updateProfile(userCred, {
+      displayName: formData.displayName,
+    })
+      .then(() => {
+        console.log("Name added: " + formData.displayName);
+        setUser(userCred);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-      if (response.status === 200 || response.status === 201) {
-        const userData = await response.data;
-        login(userData); // Call the login function with user data
-        setErrorMessage("");
-        redirectToHome();
-        console.log(userData);
-      } else {
-        console.error("Authentication failed.");
+    const response = await axios.post(
+      "http://localhost:4500/users/signup/new",
+      {
+        email: userCred.email,
+        displayName: userCred.displayName,
+        id: userCred.uid,
       }
-    } catch (error: any) {
-      setErrorMessage(error.response.data.message);
-      console.error("Error during authentication:", error.message);
+    );
+    if (response.status === 200 || response.status === 201) {
+      setErrorMessage("");
+      redirectToHome();
+    } else {
+      console.error("Signup Failed. Please try again.");
     }
   };
 
@@ -128,7 +169,7 @@ function SignUp({ type }: { type: string }) {
           label="Password"
           value={formData.password}
           onChange={handleInputChange}
-          isInvalid={validate("password", formData.password)}
+          isInvalid={isPasswordInvalid}
           errorMessage={
             isPasswordInvalid &&
             "Your password must be of at least length 8 and contain a number, a capital letter and a special character"
@@ -179,6 +220,16 @@ function SignUp({ type }: { type: string }) {
       ) : (
         <p></p>
       )}
+      <div className="flex justify-center">
+        <Button
+          onClick={handleGoogleSignUp}
+          color={undefined}
+          className="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"
+        >
+          <img src="/google.svg" className="fill-current w-6 h-6 mr-2" />
+          <span>Sign up with Google</span>
+        </Button>
+      </div>
     </div>
   );
 }

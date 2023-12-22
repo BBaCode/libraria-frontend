@@ -2,31 +2,45 @@
 
 import { useCurrentBook } from "@/app/context/CurrentBookContext";
 import { Button } from "@nextui-org/button";
+import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 import React from "react";
 
 function Page() {
   const { currentBook } = useCurrentBook();
   const volInfo = currentBook.volumeInfo;
+  const { user } = useAuth();
 
-  const postBook = (id: string, title: string, authors: string) => {
-    let bookInfo: any;
+  const postBook = (
+    id: string,
+    title: string,
+    authors: string,
+    image: string,
+    description: string
+  ) => {
+    let volumeInfo: any;
     if (authors) {
-      bookInfo = {
-        id: id,
+      volumeInfo = {
         title: title,
         authors: authors,
+        image: image,
+        description: description,
       };
     } else {
-      bookInfo = {
-        id: id,
+      volumeInfo = {
         title: title,
+        image: image,
+        description: description,
         authors: "unknown",
       };
     }
 
     axios
-      .post(`http://localhost:4500/library/writeBook`, bookInfo)
+      .post(`http://localhost:4500/library/writeBook`, {
+        volumeInfo,
+        userId: user?.uid,
+        id: id,
+      })
       .then((res) => {
         alert("Book added to library!");
       })
@@ -49,15 +63,17 @@ function Page() {
       ) : (
         <div>Author Unknown</div>
       )}
-      <img
-        className="mb-4"
-        src={volInfo.imageLinks.thumbnail}
-        alt={volInfo.title}
-      />
+      <img className="mb-4" src={volInfo.image} alt={volInfo.title} />
       <div className="">{volInfo.description}</div>
       <Button
         onClick={() => {
-          postBook(currentBook.id, volInfo.title, volInfo.authors);
+          postBook(
+            currentBook.id,
+            volInfo.title,
+            volInfo.authors,
+            volInfo.imageLinks.thumbnail,
+            volInfo.description
+          );
         }}
         className="mt-4"
         color="primary"
