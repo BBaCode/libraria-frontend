@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body>
+      <body className="body-bg">
         <Providers>
           <Navbar></Navbar>
           {children}

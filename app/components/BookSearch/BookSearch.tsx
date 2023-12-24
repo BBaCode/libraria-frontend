@@ -57,7 +57,7 @@ function BookSearch() {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
-  const { library, addBookToLibrary } = useLibrary();
+  const [isMouseInsideListbox, setIsMouseInsideListbox] = useState(false);
   const { setCurrentBook } = useCurrentBook();
   const router = useRouter();
 
@@ -74,7 +74,9 @@ function BookSearch() {
   };
 
   const handleInputBlur = () => {
-    setIsInputFocused(false);
+    if (!isMouseInsideListbox) {
+      setIsInputFocused(false);
+    }
   };
 
   const { items, isLoading } = useBooksList(search);
@@ -85,10 +87,15 @@ function BookSearch() {
   });
 
   // add new book to user library
-  const clickBook = (id: string, volumeInfo: string) => {
+  const clickBook = (id: string, volumeInfo: any) => {
     setCurrentBook({
       id: id,
-      volumeInfo: volumeInfo,
+      volumeInfo: {
+        title: volumeInfo.title,
+        authors: volumeInfo.authors,
+        image: volumeInfo.imageLinks.thumbnail || "no image",
+        description: volumeInfo.description,
+      },
     });
     setSearch("");
     setIsOpen(false);
@@ -114,11 +121,21 @@ function BookSearch() {
           inputWrapper: "h-full font-normal",
         }}
       ></Input>
-      {search.length > 3 ? ( // dont show listbox until the user has typed 3 letters
+      {search.length > 3 && isInputFocused ? ( // dont show listbox until the user has typed 3 letters
         <Listbox
           items={items}
           aria-label="Dynamic Actions"
           className="bg-black absolute overflow-y-scroll h-64 rounded-xl mt-1 lbox"
+          onMouseEnter={() => setIsMouseInsideListbox(true)}
+          onMouseLeave={() => setIsMouseInsideListbox(false)}
+          onBlur={() => {
+            // Delay hiding the listbox so that clicks on listbox items can be processed
+            setTimeout(() => {
+              if (!isMouseInsideListbox) {
+                setIsOpen(false);
+              }
+            }, 200);
+          }}
         >
           {(item: any) => (
             <ListboxItem

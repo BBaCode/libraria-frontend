@@ -23,11 +23,20 @@ function Page() {
   const { setCurrentBook } = useCurrentBook();
   const router = useRouter();
 
-  const clickBook = (id: string, volumeInfo: string) => {
+  const clickBook = (
+    id: string,
+    volumeInfo: {
+      title: string;
+      authors: string;
+      image: string;
+      description: string;
+    }
+  ) => {
     setCurrentBook({
       id: id,
       volumeInfo: volumeInfo,
     });
+    console.log(id, volumeInfo.title);
     router.push(`/books/${id}`);
   };
 

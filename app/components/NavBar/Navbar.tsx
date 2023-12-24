@@ -38,7 +38,7 @@ export const Navbar = () => {
   const menuItems = ["Library", "Books", "Friends"];
 
   return (
-    <NextUINavbar onMenuOpenChange={setIsMenuOpen}>
+    <NextUINavbar className="" onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -60,14 +60,14 @@ export const Navbar = () => {
             Library
           </Link>
         </NavbarItem>
-        <NavbarItem>
+        {/* <NavbarItem>
           <Link
             color={isActive("/books") ? "primary" : "foreground"}
             href="/books"
           >
             Books
           </Link>
-        </NavbarItem>
+        </NavbarItem> */}
         <NavbarItem>
           <Link
             color={isActive("/friends") ? "primary" : "foreground"}

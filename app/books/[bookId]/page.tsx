@@ -1,15 +1,21 @@
 "use client";
 
 import { useCurrentBook } from "@/app/context/CurrentBookContext";
-import { Button } from "@nextui-org/button";
+import { useLibrary } from "@/app/context/LibraryContext";
 import { useAuth } from "../../context/AuthContext";
+import { Button } from "@nextui-org/button";
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
 
 function Page() {
   const { currentBook } = useCurrentBook();
-  const volInfo = currentBook.volumeInfo;
+  const { library, addBookToLibrary } = useLibrary();
   const { user } = useAuth();
+  useEffect(() => {
+    console.log(library);
+  }, []);
+
+  const volInfo = currentBook.volumeInfo;
 
   const postBook = (
     id: string,
@@ -43,44 +49,77 @@ function Page() {
       })
       .then((res) => {
         alert("Book added to library!");
+        addBookToLibrary({ id: id, title: title, authors: authors });
       })
       .catch((err) => console.log(err));
   };
 
   return (
-    <div className="mx-auto container max-w-3xl mt-10">
-      <div className="text-4xl mb-1">{volInfo.title}</div>
+    <div className="relative md:mx-auto container max-w-3xl mt-10 p-4 bg-black border-slate-100 border h-screen-minus-64 shadow-slate-300 shadow-xl overflow-scroll">
+      <div className="text-6xl mb-1 text-center">{volInfo.title}</div>
       {volInfo.authors ? (
         volInfo.authors.length > 1 ? (
-          <div className="text-xl mb-4">
+          <div className="text-xl mb-4 text-center">
             {volInfo.authors.map((author: any) => (
               <div key={author}>{author}</div>
             ))}
           </div>
         ) : (
-          <div className="text-xl mb-4">{volInfo.authors[0]}</div>
+          <div className="text-xl mb-4 text-center">{volInfo.authors[0]}</div>
         )
       ) : (
         <div>Author Unknown</div>
       )}
-      <img className="mb-4" src={volInfo.image} alt={volInfo.title} />
-      <div className="">{volInfo.description}</div>
-      <Button
-        onClick={() => {
-          postBook(
-            currentBook.id,
-            volInfo.title,
-            volInfo.authors,
-            volInfo.imageLinks.thumbnail,
-            volInfo.description
-          );
-        }}
-        className="mt-4"
-        color="primary"
-        size="lg"
-      >
-        Add to Library
-      </Button>
+      {volInfo ? (
+        <img
+          className="mb-4 mx-auto w-40"
+          src={volInfo.image}
+          alt={volInfo.title}
+        />
+      ) : (
+        "No image available"
+      )}
+
+      <div className="md:max-w-lg text-center mx-auto">
+        {volInfo.description}
+      </div>
+      {library.some((book: any) => book.id === currentBook.id) ? (
+        <Button
+          //  onClick={() => {
+          // REMOVE BOOK FROM LIBRARY instead
+          //    postBook(
+          //      currentBook.id,
+          //      volInfo.title,
+          //      volInfo.authors,
+          //      volInfo.image,
+          //      volInfo.description
+          //    );
+          //  }}
+          className="absolute bottom-4 left-4"
+          color="primary"
+          isDisabled={true}
+          size="lg"
+        >
+          Already in Library
+        </Button>
+      ) : (
+        <Button
+          onClick={() => {
+            postBook(
+              currentBook.id,
+              volInfo.title,
+              volInfo.authors,
+              volInfo.image,
+              volInfo.description
+            );
+          }}
+          className="absolute bottom-4 left-4"
+          color="primary"
+          size="lg"
+        >
+          Add to Library
+        </Button>
+      )}
     </div>
   );
 }

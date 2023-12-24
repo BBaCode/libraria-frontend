@@ -8,96 +8,14 @@
 }
 
 .h-screen-minus-64 {
-  height: calc(100vh - 64px);
+  height: calc(100vh - 9.5rem);
 }
 
-#circle-orbit-container {
-  position: relative;
-  top: 25px;
-  left: 25px;
-  height: 300px;
-  width: 300px;
+.body-bg {
+  background-image: url("/bg2.png");
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-position: center;
+  height: 100vh;
 }
 
-#inner-orbit {
-  position: absolute;
-  top: -50px;
-  left: -50px;
-  width: 400px;
-  height: 400px;
-  /* border: 2px #4A437F dashed; */
-  border-radius: 100%;
-  -webkit-animation: spin-right 10s linear infinite;
-  animation: spin-right 10s linear infinite;
-}
-
-.inner-orbit-cirlces {
-  position: absolute;
-  top: 62px;
-  left: -6px;
-  height: 40px;
-  width: 40px;
-  border-radius: 100%;
-  /* background-color: #9F98E6; */
-  background: linear-gradient(to right, #e67e22, #8e44ad);
-}
-
-#middle-orbit {
-  position: absolute;
-  top: -150px;
-  left: -150px;
-  width: 600px;
-  height: 600px;
-  /* border: 2px #4A437F dashed; */
-  border-radius: 100%;
-  -webkit-animation: spin-right 15s linear infinite;
-  animation: spin-right 15s linear infinite;
-
-}
-
-.middle-orbit-cirlces {
-  position: absolute;
-  top: 25px;
-  left: 17px;
-  height: 78px;
-  width: 78px;
-  border-radius: 100%;
-  /* background-color: #4A437F; */
-    background: linear-gradient(to right, #3498db, #2ecc71);
-
-  
-}
-
-#outer-orbit {
-  position: absolute;
-  top: -300px;
-  left: -300px;
-  width: 900px;
-  height: 900px;
-  /* border: 2px #4A437F dashed; */
-  border-radius: 100%;
-  -webkit-animation: spin-right 20s linear infinite;
-  animation: spin-right 20s linear infinite;
-  overflow: visible;
-}
-
-.outer-orbit-cirlces {
-  position: absolute;
-  top: -17px;
-  left: 125px;
-  height: 100px;
-  width: 100px;
-  border-radius: 100%;
-  /* background-color: #00FFCA; */
-  background: linear-gradient(to right, #e74c3c, #f1c40f);
-}
-
-@keyframes spin-right {
-  100% {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}

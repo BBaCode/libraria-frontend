@@ -3,12 +3,12 @@ import React, { useMemo, useState } from "react";
 import { Button, Input } from "@nextui-org/react";
 import { useAuth } from "../context/AuthContext";
 import { validate } from "../validators";
+import { provider, auth, signInWithPopup } from "../firebase";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [errorMessage, setErrorMessage] = useState("");
-  const { login, redirectToHome, user, error } = useAuth();
+  const { login, user, error, redirectToHome } = useAuth();
 
   const isEmailInvalid = useMemo(() => {
     return validate("email", email);
@@ -25,6 +25,18 @@ function Login() {
       email.length !== 0 &&
       password.length !== 0
     );
+  };
+
+  const handleGoogleSignIn = async () => {
+    signInWithPopup(auth, provider)
+      .then(async (result) => {
+        const user = result.user;
+        redirectToHome();
+        console.log(user);
+      })
+      .catch((error) => {
+        // Handle Sign In Error
+      });
   };
 
   const handleSubmit = async (e: any) => {
@@ -76,6 +88,16 @@ function Login() {
       ) : (
         <p></p>
       )}
+      <div className="flex justify-center">
+        <Button
+          onClick={handleGoogleSignIn}
+          color={undefined}
+          className="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"
+        >
+          <img src="/google.svg" className="fill-current w-6 h-6 mr-2" />
+          <span>Sign in with Google</span>
+        </Button>
+      </div>
     </div>
   );
 }

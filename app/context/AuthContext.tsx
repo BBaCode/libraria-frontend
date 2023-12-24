@@ -82,6 +82,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
   const logout = async () => {
     await signOut(auth);
+    redirectToHome();
   };
 
   const contextValue: AuthContextType = {

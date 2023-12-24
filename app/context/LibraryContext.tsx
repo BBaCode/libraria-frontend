@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface Book {
+  id: string;
   title: string;
   authors: string;
 }

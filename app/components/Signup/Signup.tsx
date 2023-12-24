@@ -30,7 +30,7 @@ function SignUp({ type }: { type: string }) {
     signInWithPopup(auth, provider)
       .then(async (result) => {
         const user = result.user;
-        // Send user data to your backend
+        // Send user data to backend
         const response = await axios.post(
           "http://localhost:4500/users/signup/google",
           {
@@ -48,7 +48,7 @@ function SignUp({ type }: { type: string }) {
         }
       })
       .catch((error) => {
-        // Handle Sign In Error
+        console.log(error);
       });
   };
 
