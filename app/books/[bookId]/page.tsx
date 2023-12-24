@@ -49,7 +49,12 @@ function Page() {
       })
       .then((res) => {
         alert("Book added to library!");
-        addBookToLibrary({ id: id, title: title, authors: authors });
+        addBookToLibrary({
+          id: id,
+          title: title,
+          authors: authors,
+          dateAdded: res.data.dateAdded,
+        });
       })
       .catch((err) => console.log(err));
   };
@@ -65,10 +70,14 @@ function Page() {
             ))}
           </div>
         ) : (
-          <div className="text-xl mb-4 text-center">{volInfo.authors[0]}</div>
+          <div className="text-xl mb-4 text-center text-blue-500">
+            {volInfo.authors[0]}
+          </div>
         )
       ) : (
-        <div>Author Unknown</div>
+        <div className="text-xl mb-4 text-center text-blue-500">
+          Author Unknown
+        </div>
       )}
       {volInfo ? (
         <img
@@ -83,6 +92,7 @@ function Page() {
       <div className="md:max-w-lg text-center mx-auto">
         {volInfo.description}
       </div>
+      <div className="fixed p-10 bg-black "></div>
       {library.some((book: any) => book.id === currentBook.id) ? (
         <Button
           //  onClick={() => {
@@ -95,7 +105,7 @@ function Page() {
           //      volInfo.description
           //    );
           //  }}
-          className="absolute bottom-4 left-4"
+          className=""
           color="primary"
           isDisabled={true}
           size="lg"
@@ -113,7 +123,7 @@ function Page() {
               volInfo.description
             );
           }}
-          className="absolute bottom-4 left-4"
+          className="mt-4 mx-auto"
           color="primary"
           size="lg"
         >

@@ -68,6 +68,7 @@ function Page() {
           <TableHeader>
             <TableColumn>Title</TableColumn>
             <TableColumn>Author</TableColumn>
+            <TableColumn>Date Added</TableColumn>
             <TableColumn>STATUS</TableColumn>
           </TableHeader>
           <TableBody>
@@ -82,6 +83,7 @@ function Page() {
                 >
                   <TableCell>{book.volumeInfo.title}</TableCell>
                   <TableCell>{book.volumeInfo.authors}</TableCell>
+                  <TableCell>{book.dateAdded}</TableCell>
                   <TableCell>Read</TableCell>
                 </TableRow>
               ))

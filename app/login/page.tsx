@@ -50,13 +50,14 @@ function Login() {
   };
 
   return (
-    <div className="container p-10 mx-auto">
+    <div className="container mt-60 p-10 mx-auto bg-black max-w-md border border-white">
       <h2 className="text-center font-bold text-3xl mb-4">Login</h2>
       <form
         onSubmit={handleSubmit}
         className="mx-auto max-w-md gap-4 flex flex-col"
       >
         <Input
+          isRequired
           size="sm"
           type="email"
           label="Email"
@@ -67,6 +68,7 @@ function Login() {
           color={isEmailInvalid ? "danger" : "default"}
         />
         <Input
+          isRequired
           size="sm"
           type="password"
           label="Password"

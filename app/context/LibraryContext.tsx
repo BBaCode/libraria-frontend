@@ -4,6 +4,7 @@ interface Book {
   id: string;
   title: string;
   authors: string;
+  dateAdded: string;
 }
 
 interface LibraryContextType {

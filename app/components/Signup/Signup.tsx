@@ -129,7 +129,7 @@ function SignUp({ type }: { type: string }) {
   };
 
   return (
-    <div className="container p-10 mx-auto">
+    <div className="container mt-20 p-10 mx-auto bg-black max-w-md border border-white">
       <h2 className="text-center font-bold text-3xl mb-4">Signup</h2>
       <form
         onSubmit={handleSubmit}
