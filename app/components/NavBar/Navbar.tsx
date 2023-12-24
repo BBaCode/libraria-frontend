@@ -60,14 +60,14 @@ export const Navbar = () => {
             Library
           </Link>
         </NavbarItem>
-        {/* <NavbarItem>
+        <NavbarItem>
           <Link
             color={isActive("/books") ? "primary" : "foreground"}
-            href="/books"
+            href="/libtwo"
           >
-            Books
+            Lib 2
           </Link>
-        </NavbarItem> */}
+        </NavbarItem>
         <NavbarItem>
           <Link
             color={isActive("/friends") ? "primary" : "foreground"}
