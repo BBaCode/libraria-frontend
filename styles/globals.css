@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.animate-float {
+  animation: float 20s linear infinite;
+}
+
+.h-screen-minus-64 {
+  height: calc(100vh - 9.5rem);
+}
+
+.body-bg {
+  background-image: url("/bg2.png");
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-position: center;
+  height: 100vh;
+}
+

@@ -22,37 +22,23 @@ import {
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import React, { useState } from "react";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { usePathname } from "next/navigation";
-// import { useBooksList } from "../api/useBooksList";
-import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
-// import BookSearch from "./bookSearch";
-import BookSearch from "./bookSearchTwo";
+import BookSearch from "../BookSearch/BookSearch";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isInputFocused, setIsInputFocused] = useState(false);
 
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
 
   const isActive = (href: string) => {
     return usePathname() === href;
   };
 
-  const handleInputFocus = () => {
-    setIsInputFocused(true);
-  };
-
-  const handleInputBlur = () => {
-    setIsInputFocused(false);
-  };
-
   const menuItems = ["Library", "Books", "Friends"];
 
   return (
-    <NextUINavbar onMenuOpenChange={setIsMenuOpen}>
+    <NextUINavbar className="" onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -74,14 +60,14 @@ export const Navbar = () => {
             Library
           </Link>
         </NavbarItem>
-        <NavbarItem>
+        {/* <NavbarItem>
           <Link
             color={isActive("/books") ? "primary" : "foreground"}
             href="/books"
           >
             Books
           </Link>
-        </NavbarItem>
+        </NavbarItem> */}
         <NavbarItem>
           <Link
             color={isActive("/friends") ? "primary" : "foreground"}
@@ -110,12 +96,20 @@ export const Navbar = () => {
           <>
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
-                <Avatar
-                  isBordered
-                  name={user.displayName[0]}
-                  as="button"
-                  className="transition-transform"
-                />
+                {user.displayName ? (
+                  <Avatar
+                    isBordered
+                    name={user.displayName[0].toUpperCase()}
+                    as="button"
+                    className="transition-transform"
+                  />
+                ) : (
+                  <Avatar
+                    isBordered
+                    as="button"
+                    className="transition-transform"
+                  />
+                )}
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
                 <DropdownItem key="profile" className="h-14 gap-2">
@@ -123,10 +117,6 @@ export const Navbar = () => {
                   <p className="font-semibold">{user.email}</p>
                 </DropdownItem>
                 <DropdownItem key="settings">My Settings</DropdownItem>
-                <DropdownItem key="team_settings">Team Settings</DropdownItem>
-                <DropdownItem key="analytics">Analytics</DropdownItem>
-                <DropdownItem key="system">System</DropdownItem>
-                <DropdownItem key="configurations">Configurations</DropdownItem>
                 <DropdownItem key="help_and_feedback">
                   Help & Feedback
                 </DropdownItem>

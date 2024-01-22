@@ -1,0 +1,9 @@
+.lbox {
+    width: 500px !important;
+}
+
+.boooo > span {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
