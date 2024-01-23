@@ -129,8 +129,8 @@ function SignUp({ type }: { type: string }) {
   };
 
   return (
-    <div className="container mt-20 p-10 mx-auto bg-black max-w-md border border-white">
-      <h2 className="text-center font-bold text-3xl mb-4">Signup</h2>
+    <div className="container mt-20 p-10 mx-auto max-w-md bg-black border border-white rounded-lg">
+      <h2 className="text-center font-bold text-3xl mb-4 text-white">Signup</h2>
       <form
         onSubmit={handleSubmit}
         className="mx-auto max-w-md gap-4 flex flex-col"

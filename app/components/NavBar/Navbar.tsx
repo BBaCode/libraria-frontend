@@ -31,7 +31,7 @@ export const Navbar = () => {
 
   const { user, logout, loading } = useAuth();
 
-  const isActive = (href: string) => {
+  const IsActive = (href: string) => {
     return usePathname() === href;
   };
 
@@ -54,7 +54,7 @@ export const Navbar = () => {
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
           <Link
-            color={isActive("/library") ? "primary" : "foreground"}
+            color={IsActive("/library") ? "primary" : "foreground"}
             href="/library"
           >
             Library
@@ -70,7 +70,7 @@ export const Navbar = () => {
         </NavbarItem> */}
         <NavbarItem>
           <Link
-            color={isActive("/friends") ? "primary" : "foreground"}
+            color={IsActive("/friends") ? "primary" : "foreground"}
             href="/friends"
           >
             Friends

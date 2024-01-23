@@ -7,91 +7,91 @@ import { useAuth } from "@/app/context/AuthContext";
 import { validate } from "@/app/validators";
 
 function Page() {
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  //   const [confirmPassword, setConfirmPassword] = useState("");
+  //   const [errorMessage, setErrorMessage] = useState("");
 
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    parentEmail: "",
-    displayName: "",
-  });
+  //   const [formData, setFormData] = useState({
+  //     username: "",
+  //     password: "",
+  //     parentEmail: "",
+  //     displayName: "",
+  //   });
 
-  const isDisplayNameInvalid = useMemo(() => {
-    return validate("displayName", formData.displayName);
-  }, [formData.displayName]);
+  //   const isDisplayNameInvalid = useMemo(() => {
+  //     return validate("displayName", formData.displayName);
+  //   }, [formData.displayName]);
 
-  const isUsernameInvalid = useMemo(() => {
-    return validate("username", formData.username);
-  }, [formData.username]);
+  //   const isUsernameInvalid = useMemo(() => {
+  //     return validate("username", formData.username);
+  //   }, [formData.username]);
 
-  const isPasswordInvalid = useMemo(() => {
-    return validate("password", formData.password);
-  }, [formData.password]);
+  //   const isPasswordInvalid = useMemo(() => {
+  //     return validate("password", formData.password);
+  //   }, [formData.password]);
 
-  const isConfirmPasswordInvalid = useMemo(() => {
-    return validate("confirmPassword", confirmPassword, formData.password);
-  }, [confirmPassword]);
+  //   const isConfirmPasswordInvalid = useMemo(() => {
+  //     return validate("confirmPassword", confirmPassword, formData.password);
+  //   }, [confirmPassword]);
 
-  const isParentEmailInvalid = useMemo(() => {
-    return validate("parentEmail", formData.parentEmail);
-  }, [formData.parentEmail]);
+  //   const isParentEmailInvalid = useMemo(() => {
+  //     return validate("parentEmail", formData.parentEmail);
+  //   }, [formData.parentEmail]);
 
-  const handleInputChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  //   const handleInputChange = (e: any) => {
+  //     const { name, value } = e.target;
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       [name]: value,
+  //     }));
+  //   };
 
-  const isFormValid = () => {
-    return (
-      !isDisplayNameInvalid &&
-      !isUsernameInvalid &&
-      !isPasswordInvalid &&
-      !isParentEmailInvalid &&
-      formData.displayName.length !== 0 &&
-      formData.username.length !== 0 &&
-      formData.password.length !== 0 &&
-      formData.parentEmail.length !== 0
-    );
-  };
+  //   const isFormValid = () => {
+  //     return (
+  //       !isDisplayNameInvalid &&
+  //       !isUsernameInvalid &&
+  //       !isPasswordInvalid &&
+  //       !isParentEmailInvalid &&
+  //       formData.displayName.length !== 0 &&
+  //       formData.username.length !== 0 &&
+  //       formData.password.length !== 0 &&
+  //       formData.parentEmail.length !== 0
+  //     );
+  //   };
 
-  const { login, redirectToHome } = useAuth();
+  //   const { login, redirectToHome } = useAuth();
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  //   const handleSubmit = async (e: any) => {
+  //     e.preventDefault();
 
-    try {
-      const response = await axios.post(
-        "http://localhost:4500/users/signup/child",
-        {
-          username: formData.username,
-          password: formData.password,
-          displayName: formData.displayName,
-          parentEmail: formData.parentEmail,
-        }
-      );
+  //     try {
+  //       const response = await axios.post(
+  //         "http://localhost:4500/users/signup/child",
+  //         {
+  //           username: formData.username,
+  //           password: formData.password,
+  //           displayName: formData.displayName,
+  //           parentEmail: formData.parentEmail,
+  //         }
+  //       );
 
-      if (response.status === 200 || response.status === 201) {
-        const userData = await response.data;
-        login(userData); // Call the login function with user data
-        setErrorMessage("");
-        redirectToHome();
-        console.log(userData);
-      } else {
-        console.error("Authentication failed.");
-      }
-    } catch (error: any) {
-      setErrorMessage(error.response.data.message);
-      console.error("Error during authentication:", error.message);
-    }
-  };
+  //       if (response.status === 200 || response.status === 201) {
+  //         const userData = await response.data;
+  //         login(userData); // Call the login function with user data
+  //         setErrorMessage("");
+  //         redirectToHome();
+  //         console.log(userData);
+  //       } else {
+  //         console.error("Authentication failed.");
+  //       }
+  //     } catch (error: any) {
+  //       setErrorMessage(error.response.data.message);
+  //       console.error("Error during authentication:", error.message);
+  //     }
+  //   };
 
   return (
     <div className="container p-10 mx-auto">
-      <h2 className="text-center font-bold text-3xl mb-4">Child Signup</h2>
+      {/* <h2 className="text-center font-bold text-3xl mb-4">Child Signup</h2>
       <form
         onSubmit={handleSubmit}
         className="mx-auto max-w-md gap-4 flex flex-col"
@@ -173,7 +173,7 @@ function Page() {
         <p className=" text-red-600 mx-auto text-center pt-4">{errorMessage}</p>
       ) : (
         <p></p>
-      )}
+      )} */}
     </div>
   );
 }
