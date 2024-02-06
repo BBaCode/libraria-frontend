@@ -7,6 +7,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Button,
 } from "@nextui-org/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ import { useAuth } from "../context/AuthContext";
 import SignupRedirect from "../components/SignupRedirect/SignupRedirect";
 import { useCurrentBook } from "../context/CurrentBookContext";
 import { useRouter } from "next/navigation";
+import "./library.css";
 
 function Page() {
   const { user } = useAuth();
@@ -58,6 +60,26 @@ function Page() {
     }
   }, [library]); // using library as the dependency to rerender the list
 
+  const filterBooks = (sortBy: string) => {
+    const sortedBooks = [...books].sort((a: any, b: any) => {
+      // Ensure the property exists and fallback to empty string if not found
+      const propertyA = (a.volumeInfo[sortBy] || "").toString().toLowerCase();
+      const propertyB = (b.volumeInfo[sortBy] || "").toString().toLowerCase();
+
+      if (propertyA < propertyB) {
+        return -1;
+      }
+      if (propertyA > propertyB) {
+        return 1;
+      }
+
+      // properties must be equal
+      return 0;
+    });
+    setBooks(sortedBooks);
+    console.log(sortedBooks);
+  };
+
   return (
     <div>
       {user ? (
@@ -65,11 +87,35 @@ function Page() {
           aria-label="Library"
           className=" mx-auto container max-w-5xl py-10 px-16"
         >
-          <TableHeader>
-            <TableColumn>Title</TableColumn>
-            <TableColumn>Author</TableColumn>
-            <TableColumn>Date Added</TableColumn>
-            <TableColumn>STATUS</TableColumn>
+          <TableHeader className="">
+            <TableColumn className="relative bg-gray-200 text-black rounded-md sm:rounded-none">
+              Title{" "}
+              <img
+                src="/sort.png"
+                alt="sort"
+                className="w-6 absolute top-2 right-2 sm:right-0 hover:cursor-pointer"
+                onClick={() => {
+                  filterBooks("title");
+                }}
+              />
+            </TableColumn>
+            <TableColumn className="relative bg-gray-200 text-black hide">
+              Author{" "}
+              <img
+                src="/sort.png"
+                alt="sort"
+                className="w-6 absolute top-2 right-2 sm:right-0 hover:cursor-pointer"
+                onClick={() => {
+                  filterBooks("authors");
+                }}
+              />
+            </TableColumn>
+            <TableColumn className="bg-gray-200 text-black hide">
+              Date Added
+            </TableColumn>
+            <TableColumn className="bg-gray-200 text-black hide">
+              STATUS
+            </TableColumn>
           </TableHeader>
           <TableBody>
             {books ? (
@@ -82,9 +128,11 @@ function Page() {
                   key={index.toString()}
                 >
                   <TableCell>{book.volumeInfo.title}</TableCell>
-                  <TableCell>{book.volumeInfo.authors}</TableCell>
-                  <TableCell>{book.dateAdded}</TableCell>
-                  <TableCell>Read</TableCell>
+                  <TableCell className="hide">
+                    {book.volumeInfo.authors}
+                  </TableCell>
+                  <TableCell className="hide">{book.dateAdded}</TableCell>
+                  <TableCell className="hide">Read</TableCell>
                 </TableRow>
               ))
             ) : (

@@ -60,7 +60,7 @@ function Page() {
   };
 
   return (
-    <div className="relative md:mx-auto container max-w-3xl mt-10 p-4 bg-white border-slate-100 border h-screen-minus-64 shadow-slate-300 shadow-xl overflow-y-scroll">
+    <div className="relative md:mx-auto container max-w-3xl mt-10 p-4 text-black bg-white border-slate-100 border h-screen-minus-64 shadow-slate-300 shadow-xl overflow-y-scroll">
       <div className="text-6xl mb-1 text-center">{volInfo.title}</div>
       {volInfo.authors ? (
         volInfo.authors.length > 1 ? (

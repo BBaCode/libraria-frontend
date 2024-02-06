@@ -35,7 +35,7 @@ export const Navbar = () => {
     return usePathname() === href;
   };
 
-  const menuItems = ["Library", "Books", "Friends"];
+  const menuItems = ["Library"];
 
   return (
     <NextUINavbar className="" onMenuOpenChange={setIsMenuOpen}>
@@ -62,20 +62,12 @@ export const Navbar = () => {
         </NavbarItem>
         {/* <NavbarItem>
           <Link
-            color={isActive("/books") ? "primary" : "foreground"}
-            href="/books"
-          >
-            Books
-          </Link>
-        </NavbarItem> */}
-        <NavbarItem>
-          <Link
             color={IsActive("/friends") ? "primary" : "foreground"}
             href="/friends"
           >
             Friends
           </Link>
-        </NavbarItem>
+        </NavbarItem> */}
         <NavbarItem>
           <BookSearch></BookSearch>
         </NavbarItem>
@@ -132,15 +124,11 @@ export const Navbar = () => {
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
             <Link
-              color={
-                index === 2
-                  ? "primary"
-                  : index === menuItems.length - 1
-                  ? "danger"
-                  : "foreground"
-              }
+              onClick={() => {
+                setIsMenuOpen(false);
+              }}
               className="w-full"
-              href="#"
+              href="/library"
               size="lg"
             >
               {item}
